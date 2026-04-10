@@ -1,0 +1,60 @@
+/* dark.css - темная тема */
+
+body.dark {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+body.dark .container {
+    background: #1e1e2e;
+    color: #eee;
+}
+
+body.dark .input-group label {
+    color: #ccc;
+}
+
+body.dark input,
+body.dark select {
+    background: #2d2d3d;
+    border-color: #444;
+    color: #eee;
+}
+
+body.dark input:focus {
+    border-color: #667eea;
+}
+
+body.dark .mode-btn {
+    background: #2d2d3d;
+    color: #eee;
+}
+
+body.dark .mode-btn.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+body.dark .result-card {
+    background: #2d2d3d;
+}
+
+body.dark .detail-card {
+    background: #2d2d3d;
+}
+
+body.dark .detail-value {
+    color: #eee;
+}
+
+body.dark .employee-card {
+    background: #2d2d3d;
+}
+
+body.dark .history-item {
+    background: #2d2d3d;
+}
+
+body.dark .subtitle,
+body.dark .detail-label,
+body.dark .history-date {
+    color: #aaa;
+}
