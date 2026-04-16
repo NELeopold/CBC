@@ -1,9 +1,14 @@
-/* dark.css - темная тема */
+/* темная тема */
 
 body.dark {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
 }
-
+body.dark h1{
+    color: #dbdbdb;
+}
+/* body.dark .subtitle{
+    color: #dbdbdb;
+} */
 body.dark .container {
     background: #1e1e2e;
     color: #eee;
@@ -21,7 +26,7 @@ body.dark select {
 }
 
 body.dark input:focus {
-    border-color: #667eea;
+    border-color: #848897;
 }
 
 body.dark .mode-btn {
@@ -30,7 +35,7 @@ body.dark .mode-btn {
 }
 
 body.dark .mode-btn.active {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #242222;
 }
 
 body.dark .result-card {
@@ -49,6 +54,7 @@ body.dark .employee-card {
     background: #2d2d3d;
 }
 
+
 body.dark .history-item {
     background: #2d2d3d;
 }
@@ -57,4 +63,25 @@ body.dark .subtitle,
 body.dark .detail-label,
 body.dark .history-date {
     color: #aaa;
+}
+body.dark .calculate-btn{
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(to bottom, #662500 0%, #411300 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 20px 0 25px;
+    font-family: inherit;
+}
+body.dark .theme-btn{
+    background: #2c2c2c;
+}
+body.dark .logout-btn{
+    background: #2c2c2c;
+    color: white;
 }

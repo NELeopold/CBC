@@ -1,4 +1,4 @@
-// employees.js - работа с сотрудниками
+
 
 let employees = [];
 
@@ -53,7 +53,6 @@ function renderEmployeesList() {
         </div>
     `).join('');
     
-    // Добавляем обработчики удаления
     document.querySelectorAll('.delete-employee-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const id = parseInt(btn.getAttribute('data-id'));

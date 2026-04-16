@@ -1,8 +1,6 @@
-// app.js - главный контроллер приложения
-
 let currentMode = 'roi';
 
-// DOM элементы
+
 const modeBtns = document.querySelectorAll('.mode-btn');
 const calculateBtn = document.getElementById('calculateBtn');
 const themeToggle = document.getElementById('themeToggle');
@@ -10,7 +8,7 @@ const clearHistoryBtn = document.getElementById('clearHistoryBtn');
 const addEmployeeBtn = document.getElementById('addEmployeeBtn');
 const subtitleText = document.getElementById('subtitleText');
 
-// ========== ФУНКЦИЯ ПЕРЕКЛЮЧЕНИЯ РЕЖИМОВ ==========
+
 function switchMode(mode) {
     currentMode = mode;
     
@@ -22,8 +20,7 @@ function switchMode(mode) {
             btn.classList.remove('active');
         }
     });
-    
-    // Обновляем подзаголовок
+
     const subtitles = {
         'roi': 'Калькулятор окупаемости инвестиций',
         'revenue': 'Калькулятор выручки от продаж',
@@ -45,16 +42,13 @@ function switchMode(mode) {
     if (revenueMode) revenueMode.style.display = 'none';
     if (kpiMode) kpiMode.style.display = 'none';
     if (employeesMode) employeesMode.style.display = 'none';
-    
-    // Показываем выбранный режим
+
     const selectedMode = document.getElementById(`${mode}Mode`);
     if (selectedMode) selectedMode.style.display = 'block';
-    
-    // Скрываем результаты
+
     const resultsContainer = document.getElementById('resultsContainer');
     if (resultsContainer) resultsContainer.innerHTML = '';
-    
-    // Скрываем/показываем кнопку "Рассчитать" в зависимости от режима И роли
+
     if (calculateBtn) {
         const user = getCurrentUser();
         // Если админ ИЛИ режим сотрудников - скрываем кнопку
@@ -66,7 +60,6 @@ function switchMode(mode) {
     }
 }
 
-// ========== ФУНКЦИИ ОТОБРАЖЕНИЯ РЕЗУЛЬТАТОВ ==========
 function displayROIResult(result) {
     const container = document.getElementById('resultsContainer');
     if (!container) return;
@@ -149,7 +142,6 @@ function displayKPIResult(result) {
     `;
 }
 
-// ========== ОСНОВНАЯ ФУНКЦИЯ РАСЧЕТА ==========
 function calculate() {
     try {
         let result;
@@ -305,7 +297,6 @@ function clearHistory() {
     }
 }
 
-// ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
 
 
 function getModeName(mode) {
@@ -335,7 +326,6 @@ function loadTheme() {
     }
 }
 
-// ========== ДОБАВЛЕНИЕ СОТРУДНИКА ==========
 function showAddEmployeeModal() {
     if (!hasPermission('canManageEmployees')) {
         alert('У вас нет прав для добавления сотрудников');
@@ -373,17 +363,21 @@ function showAddEmployeeModal() {
     }
 }
 
-// ========== НАСТРОЙКА ОБРАБОТЧИКОВ ==========
+
 function setupEventListeners() {
     modeBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             const mode = btn.getAttribute('data-mode');
-            // Проверяем, видна ли кнопка (не скрыта через display)
+
             if (btn.style.display !== 'none') {
                 switchMode(mode);
             }
         });
     });
+    const exportHistoryBtn = document.getElementById('exportHistoryBtn');
+    if (exportHistoryBtn) {
+        exportHistoryBtn.addEventListener('click', exportHistoryToCSV);
+    }
     
     if (calculateBtn) {
         calculateBtn.addEventListener('click', calculate);
@@ -410,7 +404,7 @@ function setupEventListeners() {
     })
 }
 
-// ========== ИНИЦИАЛИЗАЦИЯ ==========
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('App initializing...');
     
@@ -427,3 +421,128 @@ document.addEventListener('DOMContentLoaded', () => {
     
     console.log('App initialized');
 });
+
+function exportHistoryToCSV() {
+
+    if (!hasPermission('canViewHistory')) {
+        alert('У вас нет прав для скачивания истории');
+        return;
+    }
+    
+    const calculations = getCalculations();
+    
+    if (calculations.length === 0) {
+        alert('Нет данных для экспорта');
+        return;
+    }
+    
+
+    const data = calculations.map(calc => ({
+        'Дата': new Date(calc.date).toLocaleString('ru-RU'),
+        'Тип расчета': getModeName(calc.mode),
+        'Результат': calc.result,
+        'Пользователь': calc.userName || 'Unknown',
+    }));
+
+    const headers = ['Дата', 'Тип расчета', 'Результат', 'Пользователь'];
+
+    let csv = headers.join(';') + '\n';
+    
+    data.forEach(row => {
+        const values = headers.map(header => {
+            let value = row[header];
+
+            if (typeof value === 'string' && (value.includes(';') || value.includes('"'))) {
+                value = `"${value.replace(/"/g, '""')}"`;
+            }
+            return value;
+        });
+        csv += values.join(';') + '\n';
+    });
+
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    
+
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+
+    const now = new Date();
+    const filename = `kpi_history_${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}_${now.getHours()}-${now.getMinutes()}.csv`;
+    
+    link.href = url;
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    
+    alert(`История успешно скачана! Файл: ${filename}`);
+}
+
+function exportDetailedHistoryToCSV() {
+    if (!hasPermission('canViewHistory')) {
+        alert('У вас нет прав для скачивания истории');
+        return;
+    }
+    
+    const calculations = getCalculations();
+    
+    if (calculations.length === 0) {
+        alert('Нет данных для экспорта');
+        return;
+    }
+    
+
+    const data = calculations.map(calc => {
+        let details = '';
+
+        if (calc.inputs) {
+            if (calc.mode === 'roi') {
+                details = `Инвестиции: ${calc.inputs.investment || '?'} ₽, Доход: ${calc.inputs.returnAmount || '?'} ₽`;
+            } else if (calc.mode === 'revenue') {
+                details = `Продажи: ${calc.inputs.salesCount || '?'} шт., Средний чек: ${calc.inputs.avgPrice || '?'} ₽`;
+            } else if (calc.mode === 'kpi') {
+                details = `Факт: ${calc.inputs.actual || '?'}, План: ${calc.inputs.planned || '?'}, Вес: ${calc.inputs.weight || '100'}%`;
+            }
+        }
+        
+        return {
+            'Дата': new Date(calc.date).toLocaleString('ru-RU'),
+            'Тип расчета': getModeName(calc.mode),
+            'Результат': calc.result,
+            'Детали': details,
+            'Пользователь': calc.userName || 'Unknown',
+        };
+    });
+    
+    const headers = ['Дата', 'Тип расчета', 'Результат', 'Детали', 'Пользователь'];
+    
+    let csv = headers.join(';') + '\n';
+    
+    data.forEach(row => {
+        const values = headers.map(header => {
+            let value = row[header];
+            if (typeof value === 'string' && (value.includes(';') || value.includes('"'))) {
+                value = `"${value.replace(/"/g, '""')}"`;
+            }
+            return value;
+        });
+        csv += values.join(';') + '\n';
+    });
+    
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    const now = new Date();
+    const filename = `kpi_history_detailed_${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}.csv`;
+    
+    link.href = url;
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    
+    alert(`Детальная история успешно скачана!`);
+}

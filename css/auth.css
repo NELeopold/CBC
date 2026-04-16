@@ -6,7 +6,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(90deg, #ebebeb, #cabcc4);
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -181,7 +181,6 @@ input:focus, select:focus {
         flex-direction: column;
     }
 }
-/* Добавь в конец файла auth.css */
 
 .info-message {
     background: #e3f2fd;

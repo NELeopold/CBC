@@ -1,7 +1,6 @@
-// revenueCalculator.js - логика расчета Дохода
+
 
 function calculateRevenue(salesCount, avgPrice) {
-    // Валидация
     if (isNaN(salesCount) || salesCount === '') {
         throw new Error('Пожалуйста, заполните поле "Количество продаж"');
     }

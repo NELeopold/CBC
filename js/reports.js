@@ -1,16 +1,11 @@
-// reports.js - Генерация отчетов и экспорт данных
-
-// Экспорт в CSV
 function exportToCSV(data, filename = 'report.csv') {
     if (!data || data.length === 0) {
         alert('Нет данных для экспорта');
         return;
     }
     
-    // Получаем заголовки
     const headers = Object.keys(data[0]);
     
-    // Формируем CSV строки
     let csv = headers.join(',') + '\n';
     
     data.forEach(row => {
@@ -24,7 +19,6 @@ function exportToCSV(data, filename = 'report.csv') {
         csv += values.join(',') + '\n';
     });
     
-    // Скачиваем файл
     const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
@@ -39,7 +33,6 @@ function exportToCSV(data, filename = 'report.csv') {
     alert('Отчет успешно экспортирован!');
 }
 
-// Экспорт в JSON
 function exportToJSON(data, filename = 'report.json') {
     const json = JSON.stringify(data, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
@@ -56,7 +49,6 @@ function exportToJSON(data, filename = 'report.json') {
     alert('JSON файл успешно экспортирован!');
 }
 
-// Импорт из JSON
 function importFromJSON(file, callback) {
     const reader = new FileReader();
     
@@ -77,7 +69,6 @@ function importFromJSON(file, callback) {
     reader.readAsText(file);
 }
 
-// Генерация отчета по KPI сотрудников
 function generateKPIReport(employees, calculations) {
     const report = {
         generatedAt: new Date().toISOString(),
@@ -89,7 +80,6 @@ function generateKPIReport(employees, calculations) {
     };
     
     if (employees.length > 0 && calculations.length > 0) {
-        // Расчет среднего KPI
         const kpiValues = calculations
             .filter(calc => calc.mode === 'kpi')
             .map(calc => parseFloat(calc.result));
@@ -98,7 +88,6 @@ function generateKPIReport(employees, calculations) {
             report.averageKPI = kpiValues.reduce((a, b) => a + b, 0) / kpiValues.length;
         }
         
-        // Лучшие и худшие сотрудники
         const employeeKPIs = employees.map(emp => {
             const empCalculations = calculations.filter(calc => calc.employeeId === emp.id);
             const avgKPI = empCalculations.length > 0 
@@ -119,7 +108,6 @@ function generateKPIReport(employees, calculations) {
     return report;
 }
 
-// Генерация финансового отчета
 function generateFinancialReport(calculations) {
     const roiCalculations = calculations.filter(calc => calc.mode === 'roi');
     const revenueCalculations = calculations.filter(calc => calc.mode === 'revenue');
@@ -150,7 +138,6 @@ function generateFinancialReport(calculations) {
     return report;
 }
 
-// Печать отчета
 function printReport(elementId) {
     const element = document.getElementById(elementId);
     if (!element) {
@@ -186,7 +173,6 @@ function printReport(elementId) {
     printWindow.print();
 }
 
-// Добавление кнопки экспорта в интерфейс
 function addExportButtons() {
     const container = document.getElementById('resultsContainer');
     if (!container) return;

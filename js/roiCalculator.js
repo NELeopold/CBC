@@ -1,4 +1,4 @@
-// roiCalculator.js - логика расчета ROI
+
 
 function calculateROI(investment, returnAmount) {
     if (investment === 0) {

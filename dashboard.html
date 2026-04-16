@@ -20,22 +20,20 @@
             </div>
         </div>
         
-        <div class="subtitle" id="subtitle">
-            <span id="subtitleText">Калькулятор эффективности</span>
+        <div class="subtitle" id="subtitleText">
+            <span id="subtitleTextSpan">Калькулятор эффективности</span>
         </div>
 
-        <!-- Кнопки переключения режимов -->
         <div class="mode-buttons">
             <button class="mode-btn" data-mode="roi">ROI</button>
             <button class="mode-btn" data-mode="revenue">Доход</button>
             <button class="mode-btn" data-mode="kpi">KPI сотрудника</button>
-            <!-- <button class="mode-btn" data-mode="employees">Сотрудники</button> -->
+            <button class="mode-btn" data-mode="employees">Сотрудники</button>
         </div>
 
-        <!-- Режим ROI -->
         <div id="roiMode" class="mode-content">
             <div class="input-group">
-                <label>Размер вложений</label>
+                <label>Размер вложений (инвестиции)</label>
                 <input type="number" id="investment" placeholder="Введите сумму вложений">
             </div>
             <div class="input-group">
@@ -44,19 +42,17 @@
             </div>
         </div>
 
-        <!-- Режим Доход -->
         <div id="revenueMode" class="mode-content">
             <div class="input-group">
                 <label>Количество продаж за период</label>
                 <input type="number" id="salesCount" placeholder="Например: 150">
             </div>
             <div class="input-group">
-                <label>Средняя стоимость продажи</label>
+                <label>Средняя стоимость продажи (₽)</label>
                 <input type="number" id="avgPrice" placeholder="Например: 5000">
             </div>
         </div>
 
-        <!-- Режим KPI сотрудника -->
         <div id="kpiMode" class="mode-content">
             <div class="input-group">
                 <label>Выберите сотрудника</label>
@@ -78,20 +74,20 @@
             </div>
         </div>
 
-        <!-- Режим Сотрудники (только для админа) -->
         <div id="employeesMode" class="mode-content">
-            <button id="addEmployeeBtn" class="add-btn">Добавить сотрудника</button>
+            <button id="addEmployeeBtn" class="add-btn">➕ Добавить сотрудника</button>
             <div id="employeesList" class="employees-list"></div>
         </div>
 
         <button class="calculate-btn" id="calculateBtn">Рассчитать</button>
 
-        <!-- Результаты -->
         <div id="resultsContainer"></div>
 
-        <!-- История расчетов -->
         <div id="historySection" style="display: none;">
-            <h3>История расчетов</h3>
+            <div class="history-header">
+                <h3>История расчетов</h3>
+                <button id="exportHistoryBtn" class="export-btn">Скачать историю (CSV)</button>
+            </div>
             <div id="historyList" class="history-list"></div>
             <button id="clearHistoryBtn" class="clear-btn">Очистить историю</button>
         </div>

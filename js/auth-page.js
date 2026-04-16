@@ -1,9 +1,8 @@
-// auth-page.js - логика для страницы входа/регистрации
 
 const USERS_KEY = 'kpi_users';
 const CURRENT_USER_KEY = 'kpi_current_user';
 
-// Предустановленный администратор
+
 const DEFAULT_ADMIN = {
     id: 'admin_1',
     username: 'admin',
@@ -13,7 +12,7 @@ const DEFAULT_ADMIN = {
     createdAt: new Date().toISOString()
 };
 
-// Инициализация - создаем админа если его нет
+
 function initAdmin() {
     let users = getUsers();
     console.log('Текущие пользователи:', users);
@@ -30,7 +29,7 @@ function initAdmin() {
     }
 }
 
-// Получить всех пользователей
+
 function getUsers() {
     const users = localStorage.getItem(USERS_KEY);
     const parsedUsers = users ? JSON.parse(users) : [];
@@ -38,17 +37,14 @@ function getUsers() {
     return parsedUsers;
 }
 
-// Сохранить пользователей
 function saveUsers(users) {
     localStorage.setItem(USERS_KEY, JSON.stringify(users));
     console.log('Пользователи сохранены:', users);
 }
 
-// Зарегистрировать пользователя (только роль "user")
 function registerUser(username, email, password) {
     const users = getUsers();
-    
-    // Проверка на существующего пользователя
+
     if (users.find(u => u.username === username)) {
         throw new Error('Пользователь с таким именем уже существует');
     }
@@ -56,8 +52,7 @@ function registerUser(username, email, password) {
     if (users.find(u => u.email === email)) {
         throw new Error('Пользователь с таким email уже существует');
     }
-    
-    // Создание нового пользователя (только роль "user")
+
     const newUser = {
         id: Date.now(),
         username: username,
@@ -103,7 +98,6 @@ function loginUser(username, password) {
     return currentUser;
 }
 
-// Показать ошибку
 function showError(message) {
     const errorDiv = document.getElementById('errorMessage');
     errorDiv.textContent = message;
@@ -113,7 +107,6 @@ function showError(message) {
     }, 3000);
 }
 
-// Показать успех
 function showSuccess(message) {
     const successDiv = document.getElementById('successMessage');
     successDiv.textContent = message;
@@ -123,7 +116,6 @@ function showSuccess(message) {
     }, 3000);
 }
 
-// Переключение табов
 document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -141,14 +133,12 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     });
 });
 
-// Регистрация (только пользователь)
 document.getElementById('registerBtn').addEventListener('click', () => {
     const username = document.getElementById('regUsername').value.trim();
     const email = document.getElementById('regEmail').value.trim();
     const password = document.getElementById('regPassword').value;
     const confirmPassword = document.getElementById('regConfirmPassword').value;
     
-    // Валидация
     if (!username || !email || !password || !confirmPassword) {
         showError('Заполните все поля!');
         return;
@@ -178,13 +168,11 @@ document.getElementById('registerBtn').addEventListener('click', () => {
         registerUser(username, email, password);
         showSuccess('Регистрация прошла успешно! Теперь войдите в систему.');
         
-        // Очищаем форму
         document.getElementById('regUsername').value = '';
         document.getElementById('regEmail').value = '';
         document.getElementById('regPassword').value = '';
         document.getElementById('regConfirmPassword').value = '';
         
-        // Переключаем на форму входа
         document.querySelector('.tab-btn[data-tab="login"]').click();
         
     } catch(error) {
@@ -192,7 +180,7 @@ document.getElementById('registerBtn').addEventListener('click', () => {
     }
 });
 
-// Вход
+
 document.getElementById('loginBtn').addEventListener('click', () => {
     const username = document.getElementById('loginUsername').value.trim();
     const password = document.getElementById('loginPassword').value;
@@ -207,7 +195,6 @@ document.getElementById('loginBtn').addEventListener('click', () => {
     try {
         const user = loginUser(username, password);
         
-        // Приветствие в зависимости от роли
         if (user.role === 'admin') {
             showSuccess(`Добро пожаловать, Администратор ${user.username}!`);
         } else {
@@ -223,17 +210,12 @@ document.getElementById('loginBtn').addEventListener('click', () => {
     }
 });
 
-// Функция для очистки localStorage (для отладки)
 function clearAllData() {
     localStorage.clear();
     console.log('Все данные очищены');
     location.reload();
 }
 
-// Добавляем кнопку очистки (только для отладки, можно закомментировать)
-// window.clearAllData = clearAllData;
-
-// Вход по Enter
 document.getElementById('loginPassword').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
         document.getElementById('loginBtn').click();
@@ -246,12 +228,10 @@ document.getElementById('regConfirmPassword').addEventListener('keypress', (e) =
     }
 });
 
-// Инициализируем администратора при загрузке
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM загружен, инициализация...');
     initAdmin();
     
-    // Выводим подсказку в консоль
     console.log('========================================');
     console.log('Для входа как администратор:');
     console.log('Логин: admin');

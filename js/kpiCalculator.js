@@ -1,4 +1,4 @@
-// kpiCalculator.js - логика расчета KPI
+
 
 function calculateKPI(actual, planned, weight) {
     if (planned === 0) {
